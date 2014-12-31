@@ -2,7 +2,8 @@ define monit::process(
   $ensure="running",
   $pidfile = '',
   $start_command,
-  $stop_command) {
+  $stop_command,
+  $service = true) {
 
   #include monit
 
@@ -16,10 +17,12 @@ define monit::process(
     before  => Service[$name],
   }
 
-  service {$name:
-    ensure   => $ensure,
-    provider => 'monit',
-    require  => Service['monit'],
+  if $service {
+    service {$name:
+      ensure   => $ensure,
+      provider => 'monit',
+      require  => Service['monit'],
+    }
   }
 
 }
